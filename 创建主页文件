@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PDF阅读器</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <!-- PDF显示容器 -->
+  <div id="pdf-container" style="width: 100%; height: 90vh;"></div>
+
+  <script src="build/pdf.js"></script>
+  <script>
+    // 通过Google Drive直链加载PDF
+    const pdfUrl = "https://drive.google.com/file/d/1j5OUcfusi9-bFcOVb9cL3Cj6756NSr3y/view?usp=sharing";
+
+    // 初始化查看器
+    pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
+      // 显示第一页
+      pdf.getPage(1).then(page => {
+        const scale = 1.5;
+        const viewport = page.getViewport({scale});
+        
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        document.getElementById('pdf-container').appendChild(canvas);
+        
+        page.render({
+          canvasContext: context,
+          viewport: viewport
+        });
+      });
+    });
+  </script>
+</body>
+</html>
